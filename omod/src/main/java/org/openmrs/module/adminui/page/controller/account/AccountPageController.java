@@ -20,11 +20,10 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
-import org.openmrs.module.adminui.EmrConstants;
-import org.openmrs.module.adminui.EmrApiConstants;
+import org.openmrs.module.adminui.AdminUiConstants;
 import org.openmrs.module.adminui.account.AccountDomainWrapper;
 import org.openmrs.module.adminui.account.AccountService;
-import org.openmrs.module.adminui.account.AccountFormValidator;
+import org.openmrs.module.adminui.account.AdminUiAccountValidator;
 import org.openmrs.module.providermanagement.api.ProviderManagementService;
 import org.openmrs.ui.framework.annotation.BindParams;
 import org.openmrs.ui.framework.annotation.MethodParam;
@@ -72,7 +71,7 @@ public class AccountPageController {
         model.addAttribute("account", account);
         model.addAttribute("capabilities", accountService.getAllCapabilities());
         model.addAttribute("privilegeLevels", accountService.getAllPrivilegeLevels());
-        model.addAttribute("rolePrefix", EmrApiConstants.ROLE_PREFIX_CAPABILITY);
+        model.addAttribute("rolePrefix", AdminUiConstants.ROLE_PREFIX_CAPABILITY);
         model.addAttribute("providerRoles", providerManagementService.getAllProviderRoles(false));
     }
 
@@ -85,10 +84,40 @@ public class AccountPageController {
                        @SpringBean("accountService") AccountService accountService,
                        @SpringBean("adminService") AdministrationService administrationService,
                        @SpringBean("providerManagementService") ProviderManagementService providerManagementService,
-                       @SpringBean("accountFormValidator") AccountFormValidator accountValidator, 
+                       @SpringBean("accountFormValidator") AdminUiAccountValidator accountValidator, 
                        PageModel model,
                        HttpServletRequest request) {
+
+    	countUsers = Integer.parseInt(countTabs);
     	
+    	ArrayList<String> username = new ArrayList<String>();
+    	ArrayList<String> password = new ArrayList<String>();
+    	ArrayList<String> confirmPassword = new ArrayList<String>();
+    	ArrayList<String> privilegeLevel = new ArrayList<String>();
+    	ArrayList<String[]> roles = new ArrayList<String[]>();
+    	
+    	if(userEnabled) {
+    	
+    		for(int i=1 ; i<=countUsers ; i++) {
+    			username.add(request.getParameter("user"+i+"_username"));
+    			password.add(request.getParameter("user"+i+"_password"));
+    			confirmPassword.add(request.getParameter("user"+i+"_confirmPassword"));
+    			privilegeLevel.add(request.getParameter("user"+i+"_privilegeLevel"));
+    			roles.add(request.getParameterValues("user"+i+"_capabilities"));
+    		}
+    	
+    		account.createRequiredUsers(countUsers);
+    		account.setUsernames(username);
+    		account.setPasswords(password);
+    		account.setConfirmPasswords(confirmPassword);
+    		account.setPrivilegeLevels(privilegeLevel);
+    		account.setCapabilities(roles);
+    		
+    		//accountValidator.validate(account, errors);
+    	}
+    	//request.getSession().setAttribute(EmrConstants.SESSION_ATTRIBUTE_ERROR_MESSAGE, ""+account.getPassword(1));
+    	
+<<<<<<< HEAD
     	if(userEnabled)
     		suserEnabled = "true";
     	if(providerEnabled)
@@ -123,19 +152,21 @@ public class AccountPageController {
     	}
     	//request.getSession().setAttribute(EmrConstants.SESSION_ATTRIBUTE_ERROR_MESSAGE, ""+account.getPassword(1));
     	
+=======
+>>>>>>> 19b38cd7d43ff3e81718f95df6c7d589e9c2ae69
     	
         if (!errors.hasErrors()) {
 
             try {
                 accountService.saveAccount(account);
-                request.getSession().setAttribute(EmrConstants.SESSION_ATTRIBUTE_INFO_MESSAGE,
+                request.getSession().setAttribute(AdminUiConstants.SESSION_ATTRIBUTE_INFO_MESSAGE,
                         messageSourceService.getMessage("adminui.account.saved"));
-                request.getSession().setAttribute(EmrConstants.SESSION_ATTRIBUTE_TOAST_MESSAGE, "true");
+                request.getSession().setAttribute(AdminUiConstants.SESSION_ATTRIBUTE_TOAST_MESSAGE, "true");
 
                 return "redirect:/adminui/account/manageAccounts.page";
             } catch (Exception e) {
                 log.warn("Some error occurred while saving account details:", e);
-                request.getSession().setAttribute(EmrConstants.SESSION_ATTRIBUTE_ERROR_MESSAGE,
+                request.getSession().setAttribute(AdminUiConstants.SESSION_ATTRIBUTE_ERROR_MESSAGE,
                         messageSourceService.getMessage("adminui.account.error.save.fail "+e.getMessage()+suserEnabled+" "+sproviderEnabled, new Object[]{e.getMessage()}, Context.getLocale()));
             }
         } else {
@@ -151,7 +182,7 @@ public class AccountPageController {
         model.addAttribute("account", account);
         model.addAttribute("capabilities", accountService.getAllCapabilities());
         model.addAttribute("privilegeLevels", accountService.getAllPrivilegeLevels());
-        model.addAttribute("rolePrefix", EmrApiConstants.ROLE_PREFIX_CAPABILITY);
+        model.addAttribute("rolePrefix", AdminUiConstants.ROLE_PREFIX_CAPABILITY);
         model.addAttribute("allowedLocales", administrationService.getAllowedLocales());
         model.addAttribute("providerRoles", providerManagementService.getAllProviderRoles(false));
 
@@ -162,7 +193,7 @@ public class AccountPageController {
     private void sendErrorMessage(BindingResult errors, MessageSource messageSource, HttpServletRequest request) {
         List<ObjectError> allErrors = errors.getAllErrors();
         String message = getMessageErrors(messageSource, allErrors);
-        request.getSession().setAttribute(EmrConstants.SESSION_ATTRIBUTE_ERROR_MESSAGE,
+        request.getSession().setAttribute(AdminUiConstants.SESSION_ATTRIBUTE_ERROR_MESSAGE,
                 message);
     }
 
