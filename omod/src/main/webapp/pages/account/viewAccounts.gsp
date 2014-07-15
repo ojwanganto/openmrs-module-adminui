@@ -30,8 +30,13 @@
 				${ ui.format(it.person.personName)}
 			</td>
 			<td>
+<<<<<<< HEAD
 				<% it.users.each{ %>
 					${ ui.format(it.username)}
+=======
+				<% it.users.each{ user-> %>
+					${ ui.format(user.username)}
+>>>>>>> 19b38cd7d43ff3e81718f95df6c7d589e9c2ae69
 				<% } %>
 			</td>
 			<td>

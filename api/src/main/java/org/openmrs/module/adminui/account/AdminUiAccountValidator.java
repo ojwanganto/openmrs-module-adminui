@@ -1,20 +1,16 @@
 package org.openmrs.module.adminui.account;
 
-import org.apache.commons.lang.StringUtils;
-import org.openmrs.User;
 import org.openmrs.annotation.Handler;
-import org.openmrs.api.PasswordException;
 import org.openmrs.api.UserService;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.providermanagement.api.ProviderManagementService;
-import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Handler(supports = {AccountDomainWrapper.class}, order = 50)
-public class AccountFormValidator implements Validator {
+public class AdminUiAccountValidator implements Validator {
 
     @Autowired
     @Qualifier("messageSourceService")

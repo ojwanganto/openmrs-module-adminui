@@ -15,7 +15,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.UserService;
-import org.openmrs.module.adminui.EmrApiConstants;
+import org.openmrs.module.adminui.AdminUiConstants;
 import org.openmrs.module.adminui.account.AccountService;
 //import org.openmrs.module.adminui.account.ProviderIdentifierGenerator;
 import org.openmrs.module.providermanagement.Provider;
@@ -72,7 +72,11 @@ public class AccountDomainWrapper{
     }
 
     /*public List<User> getUsers() {
+<<<<<<< HEAD
         return userService.getUsersByPerson(person,true);
+=======
+        return userService.getUsersByPerson(person(),false);
+>>>>>>> 19b38cd7d43ff3e81718f95df6c7d589e9c2ae69
     }*/
 
     public Boolean getProvider() {
@@ -199,7 +203,7 @@ public class AccountDomainWrapper{
     	User user = userSet.get(i);
     	if (user != null && user.getRoles() != null) {
             for (Role role : user.getRoles()) {
-                if (role.getRole().startsWith(EmrApiConstants.ROLE_PREFIX_PRIVILEGE_LEVEL)) {
+                if (role.getRole().startsWith(AdminUiConstants.ROLE_PREFIX_PRIVILEGE_LEVEL)) {
                     return role;
                 }
             }
@@ -283,7 +287,7 @@ public class AccountDomainWrapper{
 
         if (user.getRoles() != null) {
             for (Role role : user.getRoles()) {
-                if (role.getRole().startsWith(EmrApiConstants.ROLE_PREFIX_CAPABILITY)) {
+                if (role.getRole().startsWith(AdminUiConstants.ROLE_PREFIX_CAPABILITY)) {
                     capabilities.add(role);
                 }
             }

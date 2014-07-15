@@ -265,7 +265,17 @@ jq(document).ready(function() {
                     value: it.id, 
                     checked: account.providerSet?.contains(it)
                 ])}
+
             <% } %>
+
+            ${ ui.includeFragment("uicommons", "field/dropDown", [
+                label: ui.message("adminui.user.providerRoles"), 
+                emptyOptionLabel: ui.message("adminui.chooseOne"), 
+                formFieldName: "providerRoles", 
+                options: providerRolesOptions,
+                multiple: "true";
+            ])}
+
             
         </div>
 
