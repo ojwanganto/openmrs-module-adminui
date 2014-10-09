@@ -1,0 +1,5 @@
+run b2g client - sudo b2g_build/build/dist/bin/b2g -profile ../gaia/profile
+
+
+build profile - make DESKTOP_SHIMS=1 NOFTU=1 DEBUG=1
+
